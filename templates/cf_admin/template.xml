@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template version="1.0">
+	<!-- General template information -->
+	<name>CF Admin</name>
+	<version>1.0.0</version>
+
+	<author>SpaceEmotion</author>
+	<website>http://www.github.com/spaceemotion</website>
+	
+	<description>Default CodeFire administrator template</description>
+
+	<!-- Template layout -->
+	<layout name="single">
+		<position type="content" name="content" />
+	</layout>
+</template>

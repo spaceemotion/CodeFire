@@ -8,7 +8,7 @@
 	<div class="tab-content">
 		<? echo $this->template->notice; ?>
 
-		<h4 class="no-margin">
+		<h4>
 			Edit access key
 
 			<small>Key-ID: <? echo $key->id; ?></small>
@@ -18,20 +18,45 @@
 			</div>
 		</h4>
 
-		<? echo $this->auth->view('forms/access', array(
-			'url' => CodeFire::ADMINCP . 'users/access/edit/' . $key->id,
-			'submit' => 'Save',
-
-			'key' => $key->key,
-			'name' => $key->name,
-			'description' => $key->description,
-
-			'key_id' => $key->id
-		)); ?>
-
 		<div class="row-fluid">
 			<div class="span6">
-				<table class="table table-striped table-hover no-margin">
+				<? echo $this->auth->view('forms/access/create', array(
+					'url' => CodeFire::ADMINCP . 'users/access/edit/' . $key->id,
+					'submit' => 'Save',
+
+					'key' => $key->key,
+					'name' => $key->name,
+					'description' => $key->description,
+
+					'key_id' => $key->id
+				)); ?>
+
+				<h5>Add access key to group</h5>
+				<? echo $this->auth->view('forms/access/add', array(
+					'url' => CodeFire::ADMINCP . 'users/access/add/group/' . $key->id,
+					'redirect' => $this->uri->uri_string(),
+
+					'id' => $key->id,
+					'placeholder' => 'Enter group name',
+					'group' => true,
+
+					'select_data' => $group_names
+				)); ?>
+
+				<h5>Add access key to user</h5>
+				<? echo $this->auth->view('forms/access/add', array(
+					'url' => CodeFire::ADMINCP . 'users/access/add/user/' . $key->id,
+					'redirect' => $this->uri->uri_string(),
+
+					'id' => $key->id,
+					'placeholder' => 'Enter user name',
+					
+					'select_data' => null
+				)); ?>
+			</div>
+
+			<div class="span6">
+				<table class="table table-striped table-hover">
 					<colgroup>
 						<col width="5" />
 						<col width="*" />
@@ -69,10 +94,8 @@
 						</tr>
 					</tfoot>
 				</table>
-			</div>
 
-			<div class="span6">
-				<table class="table table-striped table-hover no-margin">
+				<table class="table table-striped table-hover">
 					<colgroup>
 						<col width="5" />
 						<col width="*" />

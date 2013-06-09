@@ -56,7 +56,7 @@
 		</div>
 
 		<div class="tab-pane <? _checkActive('create', 'tab', 'active'); ?>" id="create">
-			<? echo $this->auth->view('forms/group', array(
+			<? echo $this->auth->view('forms/group/create', array(
 				'url' => CodeFire::ADMINCP . 'users/groups/create',
 				'submit' => 'Create group',
 

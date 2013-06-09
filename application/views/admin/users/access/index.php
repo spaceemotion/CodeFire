@@ -42,7 +42,7 @@
 		</div>
 
 		<div class="tab-pane <? _checkActive('create', 'tab', 'active'); ?>" id="create">
-			<? echo $this->auth->view('forms/access', array(
+			<? echo $this->auth->view('forms/access/create', array(
 				'url' => CodeFire::ADMINCP . 'users/access/create',
 				'submit' => 'Create key',
 

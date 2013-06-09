@@ -49,7 +49,7 @@ class CodeFire {
 		$query->join(CodeFire::TABLE_ACCESS_KEYS, 'key_id = ' . CodeFire::TABLE_ACCESS_KEYS . '.id');
 
 		if($isGroup) {
-			$query->order_by(CodeFire::TABLE_ACCESS . '.id', 'desc');
+			// $query->order_by(CodeFire::TABLE_ACCESS . '.id', 'desc');
 			
 		} else {
 			$query->where(CodeFire::TABLE_ACCESS . '.id', $id);

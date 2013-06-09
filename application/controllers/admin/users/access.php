@@ -49,13 +49,25 @@ class Access extends Admin_Controller {
 			}
 		}
 
+		$this->load->model('group_model');
+
+		$group_names = $this->group_model->find_select('id', 'title');
+
+		$select_data = array();
+		foreach($group_names as $group)
+		{
+			$select_data[$group->id] = $group->title;
+		}
+
 		$this->_publish_user('access/edit', array(
 			'key' => $this->access_model->find_id($key_id),
 			'groups' => $this->access_model->getGroupKeys($key_id),
-			'users' => $this->access_model->getUserKeys($key_id)
+			'users' => $this->access_model->getUserKeys($key_id),
+			'group_names' => $select_data
 		));
 	}
 
+	/** Post-Data only */
 	public function set()
 	{
 		$key_id = $this->input->post('key_id');
@@ -87,6 +99,7 @@ class Access extends Admin_Controller {
 		}
 	}
 
+	/** Post-Data only */
 	public function revoke()
 	{
 		$user_id = $this->input->post('user_id');
@@ -139,7 +152,8 @@ class Access extends Admin_Controller {
 		else $this->index();
 	}
 
-	public function add()
+	/** Post-Data only */
+	public function add($type = 'key')
 	{
 		$id = $this->input->post('id');
 		$key = $this->input->post('key');
@@ -147,28 +161,48 @@ class Access extends Admin_Controller {
 		$group = $this->input->post('group') !== false;
 		$grant = $this->input->post('action') == 'Grant';
 
-		$key_id = $this->access_model->getId($key)->row_array();
+		$success = false;
+		$updated = false;
 
-		if(isset($key_id['id']))
+		if ($type == 'user')
 		{
-			if($this->access_model->setAccess($key_id['id'], $id, $group, $grant))
-			{
-				$this->_set_notice('Access key added');
-			}
-			else
-			{
-				$this->_set_notice('Could not add access key', 'error');
-			}
+			// TODO
+		}
+		elseif($type == 'group')
+		{
+			// --- Remember ---
+			// key: the group
+			// id: the key-id
+
+			$success = $this->access_model->setAccess($id, $key, $group, $grant);
+			$updated = true;
 		}
 		else
 		{
-			$this->_set_notice('Access key does not exist!', 'error');
+			$key_id = $this->access_model->getId($key)->row_array();
+
+			if(isset($key_id['id']))
+			{
+				$success = $this->access_model->setAccess($key_id['id'], $id, $group, $grant);
+				$updated = true;
+			}
+			else
+			{
+				$this->_set_notice('Access key does not exist!', 'error');
+			}
 		}
 
-		if($group) redirect(CodeFire::ADMINCP . 'users/groups/edit/' . $id);
-		else redirect(CodeFire::ADMINCP . 'users/manage/edit/' . $id);
+		// Show error message
+		if($updated)
+		{
+			if($success) $this->_set_notice('Access key added');
+			else $this->_set_notice('Could not add access key', 'error');
+		}
+
+		redirect($this->input->post('redirect'));
 	}
 
+	/** Post-Data only */
 	public function delete()
 	{
 		$key_id = $this->input->post('key_id');

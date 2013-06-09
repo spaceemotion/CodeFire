@@ -148,7 +148,7 @@ class Manage extends Admin_Controller {
 		$this->load->model('group_model');
 
 		// Show create page
-		$this->_publish_user('create', $this->auth->view('forms/user', array(
+		$this->_publish_user('create', $this->auth->view('forms/user/create', array(
 			'url' => $this->uri->uri_string(),
 			'submit' => 'Create user',
 

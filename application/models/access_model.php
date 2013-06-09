@@ -19,9 +19,9 @@ class Access_Model extends MY_Model {
 		return $this->db->simple_query($query . " ON DUPLICATE KEY UPDATE allow = " . ($grant ? '1' : '0'));
 	}
 
-	public function revokeAccess($key, $user_id, $isGroup = false)
+	public function revokeAccess($key_id, $user_id, $isGroup = false)
 	{
-		$this->db->where('key_id', $key);
+		$this->db->where('key_id', $key_id);
 		$this->db->where('id', $user_id);
 		$this->db->where('group', $isGroup);
 

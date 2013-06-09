@@ -4,7 +4,6 @@
 	Assets::add_css('template.css', $this->template);
 
 	// Add javascript
-	Assets::add_script('jquery-2.0.1.min.js', $this->template);
 	Assets::add_script('bootstrap.min.js', $this->template);
 	// Assets::add_script('holder.js', $this->template));
 
@@ -34,10 +33,10 @@
 					<ul class="inline"><?
 						$navbar = array(
 							'dashboard' => array('Dashboard', 'home'),
-							//'pages' => array('Pages', 'book'),
+							'pages' => array('Pages', 'book'),
 							'users/manage' => array('Users', 'user'),
-							//'extensions' => array('Modules', 'file'),
-							//'settings' => array('Settings', 'cog')
+							'extensions' => array('Modules', 'file'),
+							'settings' => array('Settings', 'cog')
 						);
 
 						foreach($navbar as $element => $config) {
@@ -78,13 +77,12 @@
 		<!-- Footer -->
 		<div class="footer muted container">
 			&copy; 2013 by SpaceEmotion - Site rendered in {elapsed_time} seconds.
-			Powered by <? echo anchor('http://ellislab.com/codeigniter/', 'CodeIgniter', 'class="red"'); ?>
 		</div>
 
-		<!-- Javascript -->
+		<!-- jQuery -->
+		<script src="<? echo Assets::get_script('jquery-2.0.1.min.js', $this->template); ?>"></script>
+
+		<!-- Custom Javascript -->
 		<?php echo $this->template->javascript; ?>
-		<script type="text/javascript">
-			$('#tooltip').each().tooltip();
-		</script>
 	</body>
 </html>

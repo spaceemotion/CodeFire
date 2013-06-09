@@ -11,7 +11,7 @@
 <div class="row-fluid">
 	<!-- General information -->
 	<div class="span6">
-		<? echo $this->auth->view('forms/user', array(
+		<? echo $this->auth->view('forms/user/create', array(
 			'url' => CodeFire::ADMINCP . 'users/manage/edit/' . $user->id,
 			'submit' => 'Save changes',
 
@@ -72,12 +72,13 @@
 		</table>
 
 		<h5>Add access key</h5>
-		<? echo form_open(CodeFire::ADMINCP . 'users/access/add/' . $user->id, '', array('id' => $user->id)); ?>
-			<div class="input-append">
-				<? echo form_input('key', '', 'maxlength="24" placeholder="Enter access key identifier"'); ?>
-				<? echo form_submit('action', 'Grant', 'class="btn btn-success"'); ?>
-				<? echo form_submit('action', 'Deny', 'class="btn btn-danger"'); ?>
-			</div>
-		<? echo form_close(); ?>
+		<? echo $this->auth->view('forms/access/add', array(
+			'url' => CodeFire::ADMINCP . 'users/access/add/' . $user->id,
+			'redirect' => CodeFire::ADMINCP . 'users/manage/edit/' . $user->id,
+
+			'placeholder' => 'Enter access key identifier',
+
+			'id' => $user->id
+		)); ?>
 	</div>
 </div>

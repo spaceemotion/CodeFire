@@ -32,6 +32,8 @@ class Template {
     private $_template = 'template';
     private $_parser = FALSE;
     private $_cache_ttl = 0;
+
+    private $_template_path = 'templates/';
     private $_widget_path = '';
     
     private $_ci;
@@ -45,7 +47,8 @@ class Template {
         $this->_ci = & get_instance();
         $this->_ci->load->library('assets');
         
-        // set the default widget path with APPPATH
+        // set the default paths
+        $this->_template_path = '../../' . $this->_ci->codefire->config('template_path');
         $this->_widget_path = $this->_ci->codefire->config('widget_path');
         
         if (!empty($config)) {
@@ -63,10 +66,6 @@ class Template {
     public function initialize($config = array()) {
         foreach ($config as $key => $val) {
             $this->{'_' . $key} = $val;
-        }
-        
-        if ($this->_widget_path == '') {
-            $this->_widget_path = APPPATH . 'widgets/';
         }
         
         if ($this->_parser && !class_exists('CI_Parser')) {
@@ -145,7 +144,7 @@ class Template {
         if ($this->_parser) {
             $this->_ci->parser->parse($this->_template, $this->_partials);
         } else {
-            $this->_ci->load->view('../../templates/' . $this->_template . '/template', $this->_partials);
+            $this->_ci->load->view($this->_template_path . $this->_template . '/template', $this->_partials);
         }
     }
     
@@ -273,7 +272,7 @@ class Template {
      * Javascript trigger
      * @param string $source
      */
-    public function trigger_javascript($url) {
+    public function trigger_javascript($url, $isfile = false) {
         // array support
         if (is_array($url)) {
             $return = '';
@@ -283,11 +282,15 @@ class Template {
             return $return;
         }
         
-        if (!stristr($url, 'http://') && !stristr($url, 'https://') && substr($url, 0, 2) != '//') {
-            $url = $this->_ci->config->item('base_url') . $url;
-        }
+        if($isfile) {
+            return '<script type="text/javascript">' . $url . '</script>';
+        } else {
+            if (!stristr($url, 'http://') && !stristr($url, 'https://') && substr($url, 0, 2) != '//') {
+                $url = $this->_ci->config->item('base_url') . $url;
+            }
         
-        return '<script src="' . htmlspecialchars(strip_tags($url)) . '"></script>' . "\n\t";
+            return '<script src="' . htmlspecialchars(strip_tags($url)) . '"></script>' . "\n\t";
+        }
     }
     
     /**

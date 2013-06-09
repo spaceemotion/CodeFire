@@ -25,7 +25,7 @@
 		<div class="row-fluid">
 			<!-- General information -->
 			<div class="span6">
-				<? echo $this->auth->view('forms/group', array(
+				<? echo $this->auth->view('forms/group/create', array(
 					'url' => null,
 					'submit' => 'Save changes',
 
@@ -76,13 +76,15 @@
 				</table>
 
 				<h5>Add access key</h5>
-				<? echo form_open(CodeFire::ADMINCP . 'users/access/add/' . $group->id, '', array('id' => $group->id, 'group' => true)); ?>
-					<div class="input-append">
-						<? echo form_input('key', '', 'maxlength="24" placeholder="Enter access key identifier"'); ?>
-						<? echo form_submit('action', 'Grant', 'class="btn btn-success"'); ?>
-						<? echo form_submit('action', 'Deny', 'class="btn btn-danger"'); ?>
-					</div>
-				<? echo form_close(); ?>
+				<? echo $this->auth->view('forms/access/add', array(
+					'url' => CodeFire::ADMINCP . 'users/access/add/' . $group->id,
+					'redirect' => CodeFire::ADMINCP . 'users/groups/edit/' . $group->id,
+					
+					'placeholder' => 'Enter access key identifier',
+
+					'id' => $group->id,
+					'group' => true
+				)); ?>
 			</div>
 		</div>
 	</div>

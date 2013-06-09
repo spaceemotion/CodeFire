@@ -47,9 +47,5 @@ $route['logout'] = "users/logout";
 $route['register'] = "users/register";
 $route['admin'] = "admin/dashboard";
 
-// Multi-Language support
-//$route['^en/(.+)$'] = "$1";
-//$route['^en$'] = $route['default_controller'];
-
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -15,14 +15,31 @@ class Assets
 	{
 		$CI =& get_instance();
 
-		$CI->template->stylesheet->add(self::_get($filename, self::$config['css_dir'], $module));
+		$CI->template->stylesheet->add(self::get_css($filename, $module));
+	}
+
+	public static function get_css($filename, $module = null)
+	{
+		return self::_get($filename, self::$config['css_dir'], $module);
 	}
 
 	public static function add_script($filename, $module = null)
 	{
 		$CI =& get_instance();
 
-		$CI->template->javascript->add(self::_get($filename, self::$config['scripts_dir'], $module));
+		if($module === FALSE)
+		{
+			$CI->template->javascript->add($filename, true);
+		}
+		else
+		{
+			$CI->template->javascript->add(self::get_script($filename, $module));
+		}
+	}
+
+	public static function get_script($filename, $module = null)
+	{
+		return self::_get($filename, self::$config['scripts_dir'], $module);
 	}
 
 	public static function get_image($filename, $module = null)

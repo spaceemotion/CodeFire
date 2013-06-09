@@ -5,7 +5,8 @@ require_once APPPATH . "core/codefire/admin_controller.php";
 
 class Groups extends Admin_Controller {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->model('group_model');

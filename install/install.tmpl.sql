@@ -104,15 +104,16 @@
 
 	-- Meta table
 	INSERT INTO `%prefix%settings` (`key`, `value`)
-	VALUES	('auth.login', 'admin/dashboard'),
-			('auth.logout', 'users/login'),
-			('auth.incorrect_login', 'users/login'),
+	VALUES	('auth.incorrect_login', 'users/login'),
+			('auth.login', 'admin/dashboard'),
+			('auth.logout', 'users/login'),		
 			('auth.remember', 'true'),
 
+			('user.captcha', 'none'),
 			('user.defaultGroup', 3), -- User group
 			('user.guestGroup', 4), -- Guest group
 			('user.needsActivation', 'true'),
-			('user.captcha', 'none');
+			('user.registrationEnabled', 'true');
 
 	-- User groups
 	INSERT INTO `%prefix%groups` (`id`, `rank`, `title`, `description`)
@@ -121,7 +122,7 @@
 			(3, 100, 'User', 'Default registered user group'),
 			(4, 1000, 'Guest', 'Unregistered user group');
 
-	-- Privileges
+	-- Access keys
 	INSERT INTO `%prefix%access_keys` (`id`, `key`, `name`, `description`)
 	VALUES	(1, 'createUser', 'Create user', 'Create new user'),
 			(2, 'editUser', 'Edit user', 'Edit user information'),
