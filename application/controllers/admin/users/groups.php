@@ -33,7 +33,7 @@ class Groups extends Admin_Controller {
 
 		$this->_publish_user('groups/edit', array(
 			'group' => $group,
-			'keys' => $this->codefire->getAccessKeys($group->id, true)
+			'keys' => $this->codefire->getGroupAccess($group->id)
 		));
 	}
 

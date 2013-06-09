@@ -53,7 +53,7 @@
 						<tr>
 							<td><?php echo single_checkbox_form(CodeFire::ADMINCP . 'users/access/set',
 								$key->allow == 1 ? true : false,
-								false,
+								$key->id != $group->id,
 								array(
 									'id' => $group->id,
 									'key_id' => $key->key_id,
@@ -65,11 +65,14 @@
 								<? echo anchor(CodeFire::ADMINCP . 'users/access/edit/' . $key->key_id, $key->key); ?>
 							</td>
 
-							<td>
-								<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
-									array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
-									array('user_id' => $group->id, 'key_id' => $key->key_id)
-								); ?>
+							<td><? if($key->id == $group->id): ?>
+									<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
+										array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
+										array('user_id' => $group->id, 'key_id' => $key->key_id)
+									); ?>
+								<? else: ?>
+									<small class="muted">Inherited</small>
+								<? endif; ?>
 							</td>
 						</tr>
 					<? endforeach; ?></tbody>

@@ -1,7 +1,11 @@
 <h4>
 	Edit user
 
-	<small>User-ID: <? echo $user->id; ?></small>
+	<small>
+		User-ID: <? echo $user->id; ?> -
+		Registered: <? echo $user->registered; ?> -
+		Last login: <? echo $user->last_login == 0 ? 'Never' : $user->last_login; ?>
+	</small>
 
 	<div class="pull-right">
 		<? echo single_button_form(CodeFire::ADMINCP . 'users/manage/delete', array('value' => 'Delete user', 'class' => 'btn-danger btn-small'), array('user_id' => $user->id)); ?>

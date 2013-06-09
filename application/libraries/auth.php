@@ -140,8 +140,11 @@ class Auth
 	*/
 	public function login_user($user)
 	{
-		$user['logged_in'] = TRUE;
+		$this->CI->db->set('last_login', 'NOW()', FALSE);  
+		$this->CI->db->where('id', $user["id"]);
+		$this->CI->db->update(CodeFire::TABLE_USERS);
 		
+		$user['logged_in'] = TRUE;
 		$this->CI->session->set_userdata($user);
 	}
 	

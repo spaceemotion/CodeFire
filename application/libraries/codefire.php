@@ -42,6 +42,28 @@ class CodeFire {
 		return array_merge($this->getAccessKeys($group_id, true), $this->getAccessKeys($user_id));
 	}
 
+	public function getGroupAccess($group_id)
+	{
+		// Group rank clause
+		$this->CI->db->select('rank AS group_rank')->from(CodeFire::TABLE_GROUPS)->where('id', $group_id);
+		$group_rank = $this->CI->db->get_compiled_select();
+
+		// Get groups below or equal to current group rank
+		$this->CI->db->select('id AS group_id')->from(CodeFire::TABLE_GROUPS)->where("rank >= ($group_rank)", NULL, FALSE);
+		$groups = $this->CI->db->get_compiled_select();
+
+		// Get access keys
+		$this->CI->db->select(CodeFire::TABLE_ACCESS . '.id, key_id, key, allow');
+		$this->CI->db->from(CodeFire::TABLE_ACCESS);
+
+		$this->CI->db->join(CodeFire::TABLE_ACCESS_KEYS, CodeFire::TABLE_ACCESS_KEYS . '.id=key_id');
+
+		$this->CI->db->where(CodeFire::TABLE_ACCESS . ".id IN ($groups)", NULL, FALSE);
+		$this->CI->db->where('group = 1');
+		
+		return $this->CI->db->get()->result();
+	}
+
 	public function getAccessKeys($id, $isGroup = false)
 	{
 		$query = $this->CI->db->select('group, key_id, allow, key')->from(CodeFire::TABLE_ACCESS);

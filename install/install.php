@@ -1,5 +1,5 @@
 <?php
-	// leaf cms install script
+	// CodeFire install script
 	define('BASE', dirname(__FILE__) . '/');
 
 	// Get base url

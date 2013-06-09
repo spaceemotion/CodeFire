@@ -32,19 +32,24 @@ if(!function_exists('single_checkbox_form'))
 {
 	function single_checkbox_form($url, $checked, $disabled, $hidden)
 	{
-		$out = form_open($url, 'class="no-margin"', $hidden);
-		
-		$cbopt = array(
-			'name' => 'activated',
-			'checked' => $checked,
-			'onChange' => 'this.form.submit()'
-		);
+		$out = '';
+		$cbopt = array('checked' => $checked);
 
+		if(!$disabled)
+		{
+			$cbopt['name'] = 'activated';
+			$cbopt['onChange'] = 'this.form.submit()';
+
+			$out .= form_open($url, 'class="no-margin"', $hidden);
+		}
+		
 		if($disabled) $cbopt['disabled'] = 'disabled';
 
 		$out .= form_checkbox($cbopt);
 
-		return $out . form_close();
+		if(!$disabled) $out .= form_close();
+
+		return $out;
 	}
 }
 

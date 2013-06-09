@@ -5,7 +5,7 @@
 	-- Meta table
 	CREATE TABLE IF NOT EXISTS `%prefix%settings` (
 		`key` varchar(32) NOT NULL,
-		`value` varchar(32) NOT NULL,
+		`value` text NOT NULL,
 
 		PRIMARY KEY (`key`)
 	) DEFAULT CHARSET=utf8;
@@ -40,13 +40,19 @@
 		`email` varchar(32) NOT NULL,
 		`password` varchar(60) NOT NULL,
 		`group_id` int NOT NULL,
-		`activated` tinyint(1) NOT NULL,
+		`registered`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		`last_login` timestamp,
 		`banned` tinyint(1) NOT NULL DEFAULT 0,
 		`ban_reason` varchar(128) DEFAULT '',
-		`token` varchar(255) NOT NULL,
-		`identifier` varchar(255) NOT NULL,
+		`activated` tinyint(1) NOT NULL,
+		`activate_key` varchar(32),
+		
+		-- currently unsupported:
+		-- `token` varchar(255) NOT NULL, 
+		-- `identifier` varchar(255) NOT NULL,
 
 		KEY `name` (`username`),
+		KEY `activate` (`activate_key`),
 
 		PRIMARY KEY (`id`)
 	) DEFAULT CHARSET=utf8;
@@ -56,8 +62,10 @@
 		`id` int NOT NULL AUTO_INCREMENT,
 		`key` varchar(24) NOT NULL,
 		`name` varchar(32) NOT NULL,
+		`type` int NOT NULL,
 		`required` tinyint(1) NOT NULL DEFAULT 0,
-		`length` int NOT NULL DEFAULT 255,
+		`minlength` int NOT NULL DEFAULT 0,
+		`maxlength` int NOT NULL DEFAULT 255,
 		`default` varchar(255),
 
 		PRIMARY KEY (`id`)
@@ -135,6 +143,8 @@
 			('user.captcha', 'none'),
 			('user.defaultGroup', 3), -- User group
 			('user.guestGroup', 4), -- Guest group
+			('user.letterRegister', 'Thank you for registering at %website%. Click here to activate your account: %link%.'),
+			('user.letterRecovery', 'Somebody (probably you) requested a password recovery. Click here to change your password now: %link%.'),
 			('user.needsActivation', 'true'),
 			('user.registrationEnabled', 'true');
 
