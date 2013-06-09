@@ -42,7 +42,7 @@
 					<colgroup>
 						<col width="5" />
 						<col width="*" />
-						<col width="25%" />
+						<col width="50%" />
 					</colgroup>
 					<thead>
 						<tr>
@@ -71,7 +71,7 @@
 										array('user_id' => $group->id, 'key_id' => $key->key_id)
 									); ?>
 								<? else: ?>
-									<small class="muted">Inherited</small>
+									<small class="muted">Inherited from <? echo anchor(CodeFire::ADMINCP . 'users/groups/edit/' . $key->id, $key->title); ?></small>
 								<? endif; ?>
 							</td>
 						</tr>
