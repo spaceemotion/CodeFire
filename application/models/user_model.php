@@ -16,9 +16,6 @@ class User_Model extends MY_Model {
 			$this->db->where('id', $id);
 			$this->db->where('group', FALSE);
 			$this->db->delete(CodeFire::TABLE_ACCESS);
-
-			$this->db->where('user_id', $id);
-			$this->db->delete(CodeFire::TABLE_CUSTOM_DATA);
 		}
 	}
 

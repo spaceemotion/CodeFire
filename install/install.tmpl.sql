@@ -86,8 +86,8 @@
 
 	-- Group/User Privileges
 	CREATE TABLE IF NOT EXISTS `%prefix%access` (
-		`id` int NOT NULL,
 		`key_id` int NOT NULL,
+		`id` int NOT NULL,
 		`allow` tinyint(1) NOT NULL DEFAULT 1,
 		`group` tinyint(1) NOT NULL,
 
@@ -96,6 +96,29 @@
 
 		UNIQUE KEY (`id`, `key_id`, `group`)
 	);
+
+
+-- --------------------------------------------------------
+-- Add foreign keys
+-- --------------------------------------------------------
+
+	ALTER TABLE `%prefix%access`
+	ADD CONSTRAINT `%prefix%access_foreign_1`
+		FOREIGN KEY (`key_id`) REFERENCES `%prefix%access_keys` (`id`)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE;
+
+	ALTER TABLE `%prefix%user_data`
+	ADD CONSTRAINT `%prefix%users_forgein_1`
+		FOREIGN KEY (`user_id`) REFERENCES `%prefix%users` (`id`)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE;
+
+	ALTER TABLE `%prefix%user_fields`
+	ADD CONSTRAINT `%prefix%users_forgein_2`
+		FOREIGN KEY (`id`) REFERENCES `%prefix%user_data` (`id`)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE;
 
 
 -- --------------------------------------------------------
@@ -128,8 +151,8 @@
 			(2, 'editUser', 'Edit user', 'Edit user information'),
 			(3, 'deleteUser', 'Delete user', 'Completely remove a user and all associated data');
 
-	INSERT INTO `%prefix%access` (`id`, `key_id`, `allow`, `group`)
+	INSERT INTO `%prefix%access` (`key_id`, `id`, `allow`, `group`)
 	VALUES	(1, 1, 1, 1), -- Admin
-			(1, 2, 1, 1),
-			(1, 3, 1, 1);
+			(2, 1, 1, 1),
+			(3, 1, 1, 1);
 

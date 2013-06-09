@@ -56,18 +56,7 @@ class Access_Model extends MY_Model {
 		return $this->db->select('id')->where('key', $key)->get(CodeFire::TABLE_ACCESS_KEYS);
 	}
 
-	public function delete($id)
-	{
-		parent::delete($id);
-
-		if($id != NULL)
-		{
-			$this->db->where('key_id', $id);
-			$this->db->delete(CodeFire::TABLE_ACCESS);
-		}
-	}
-
 }
 
-/* End of file privileges_model.php */
-/* Location: ./application/models/privileges_model.php */
+/* End of file access_model.php */
+/* Location: ./application/models/access_model.php */
