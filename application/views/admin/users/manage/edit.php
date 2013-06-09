@@ -62,7 +62,7 @@
 						<? echo anchor(CodeFire::ADMINCP . 'users/access/edit/' . $key->key_id, $key->key); ?>
 					</td>
 
-					<td><? if($key->group == 0): ?>
+					<td style="text-align: right"><? if($key->group == 0): ?>
 							<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
 								array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
 								array('user_id' => $user->id, 'key_id' => $key->key_id)

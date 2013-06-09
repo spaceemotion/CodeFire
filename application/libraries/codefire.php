@@ -45,12 +45,12 @@ class CodeFire {
 	public function getGroupAccess($group_id)
 	{
 		// Group rank clause
-		$this->CI->db->select('rank AS group_rank')->from(CodeFire::TABLE_GROUPS)->where('id', $group_id);
-		$group_rank = $this->CI->db->get_compiled_select();
+		$this->CI->db->select('rank AS group_rank')->where('id', $group_id);
+		$group_rank = $this->CI->db->get_compiled_select(CodeFire::TABLE_GROUPS);
 
 		// Get groups below or equal to current group rank
-		$this->CI->db->select('id AS group_id')->from(CodeFire::TABLE_GROUPS)->where("rank >= ($group_rank)", NULL, FALSE);
-		$groups = $this->CI->db->get_compiled_select();
+		$this->CI->db->select('id AS group_id')->where("rank >= ($group_rank)", NULL, FALSE);
+		$groups = $this->CI->db->get_compiled_select(CodeFire::TABLE_GROUPS);
 
 		// Get access keys
 		$this->CI->db->select(CodeFire::TABLE_ACCESS . '.id, key_id, key, allow');

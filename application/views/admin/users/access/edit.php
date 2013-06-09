@@ -76,11 +76,11 @@
 								));
 							?></td>
 
-							<td style="padding-top: 11px">
+							<td>
 								<? echo anchor(CodeFire::ADMINCP . 'users/groups/edit/' . $group->id, $group->title); ?>
 							</td>
 
-							<td>
+							<td style="text-align: right">
 								<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
 									array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
 									array('user_id' => $group->id, 'key_id' => $key->id)
@@ -118,11 +118,11 @@
 								));
 							?></td>
 							
-							<td style="padding-top: 11px">
+							<td>
 								<? echo anchor(CodeFire::ADMINCP . 'users/manage/edit/' . $user->id, $user->username); ?>
 							</td>
 
-							<td>
+							<td style="text-align: right">
 								<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
 									array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
 									array('user_id' => $user->id, 'key_id' => $key->id, 'key' => TRUE)
