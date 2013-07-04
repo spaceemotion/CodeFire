@@ -1,3 +1,4 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <? echo form_open($url, null, array('id' => $id, 'group' => isset($group), 'redirect' => $redirect)); ?>
 	<div class="input-append">
 		<? if(isset($select_data)): ?>

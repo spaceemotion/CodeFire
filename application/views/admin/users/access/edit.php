@@ -83,7 +83,7 @@
 							<td style="text-align: right">
 								<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
 									array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
-									array('user_id' => $group->id, 'key_id' => $key->id)
+									array('user_id' => $group->id, 'key_id' => $key->id, 'key' => TRUE)
 								); ?>
 							</td>
 						</tr>

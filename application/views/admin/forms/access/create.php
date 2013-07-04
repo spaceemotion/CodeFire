@@ -1,3 +1,4 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <? echo form_open($url, 'class="form-horizontal"', isset($key_id) ? array('key_id' => $key_id) : NULL); ?>
 	<table class="table table-striped">
 		<colgroup>

@@ -188,7 +188,7 @@ class Manage extends Admin_Controller {
 	{
 		$this->_set_tab($file);
 
-		parent::_publish_user('manage/index', array(
+		parent::_publish_tab('users', 'manage/index', array(
 			'content' => $iscontent ? $data : $this->auth->view('users/manage/' . $file, $data)
 		));
 	}

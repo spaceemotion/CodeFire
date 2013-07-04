@@ -68,7 +68,7 @@
 							<td style="text-align: right"><? if($key->id == $group->id): ?>
 									<? echo single_button_form(CodeFire::ADMINCP . 'users/access/revoke',
 										array('value' => 'Revoke', 'class' => 'btn-small btn-link'),
-										array('user_id' => $group->id, 'key_id' => $key->key_id)
+										array('user_id' => $group->id, 'key_id' => $key->key_id, 'group' => TRUE)
 									); ?>
 								<? else: ?>
 									<small class="muted">Inherited from <? echo anchor(CodeFire::ADMINCP . 'users/groups/edit/' . $key->id, $key->title); ?></small>

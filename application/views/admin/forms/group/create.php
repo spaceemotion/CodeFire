@@ -1,3 +1,4 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <? echo form_open($url, 'class="row-fluid"', array('type' => 'details')); ?>
 	<table class="table table-striped">
 		<thead>

@@ -8,7 +8,7 @@ class Application extends CI_Controller {
 		
 		log_message('debug', 'Application Loaded');
 
-		// $this->output->enable_profiler(true);
+		$this->output->enable_profiler(true);
 	}
 
 	public function login($redirect = NULL)

@@ -21,7 +21,7 @@ class Access extends Admin_Controller {
 	{
 		$this->_set_default_tab('list');
 
-		$this->_publish_user('access/index', array(
+		$this->_publish_tab('users', 'access/index', array(
 			'keys' => $this->access_model->find_all()
 		));
 	}
@@ -59,7 +59,7 @@ class Access extends Admin_Controller {
 			$select_data[$group->id] = $group->title;
 		}
 
-		$this->_publish_user('access/edit', array(
+		$this->_publish_tab('users', 'access/edit', array(
 			'key' => $this->access_model->find_id($key_id),
 			'groups' => $this->access_model->getGroupKeys($key_id),
 			'users' => $this->access_model->getUserKeys($key_id),
@@ -103,15 +103,16 @@ class Access extends Admin_Controller {
 	public function revoke()
 	{
 		$user_id = $this->input->post('user_id');
+		$group = $this->input->get_post('group') !== FALSE;
 		$key_id = $this->input->post('key_id');
 
-		if($this->access_model->revokeAccess($key_id, $user_id, FALSE))
+		if($this->access_model->revokeAccess($key_id, $user_id, $group))
 		{
 			$this->_set_notice('Access key revoked!');
 		}
 		else
 		{
-			$this->_set_notice('Access key does not exist or belongs to a group!', 'error');
+			$this->_set_notice('Access key does not exist (or belongs to a group)!', 'error');
 		}
 
 		if($this->input->post('key') !== FALSE)
@@ -120,7 +121,7 @@ class Access extends Admin_Controller {
 		} 
 		else
 		{
-			redirect(CodeFire::ADMINCP . 'users/manage/edit/' . $user_id);
+			redirect(CodeFire::ADMINCP . 'users/' . ($group ? 'groups' : 'manage') . '/edit/' . $user_id);
 		}
 	}
 

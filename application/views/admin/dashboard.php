@@ -1,3 +1,4 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <div class="content">
 	<h3>Dashboard</h3>
 

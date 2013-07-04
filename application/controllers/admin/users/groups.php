@@ -16,7 +16,7 @@ class Groups extends Admin_Controller {
 	{
 		$this->_set_default_tab('list');
 
-		$this->_publish_user('groups/index', array(
+		$this->_publish_tab('users', 'groups/index', array(
 			'groups' => $this->group_model->find_all()
 		));
 	}
@@ -31,7 +31,7 @@ class Groups extends Admin_Controller {
 
 		$group = $this->group_model->find_id($id);
 
-		$this->_publish_user('groups/edit', array(
+		$this->_publish_tab('users', 'groups/edit', array(
 			'group' => $group,
 			'keys' => $this->codefire->getGroupAccess($group->id)
 		));

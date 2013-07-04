@@ -21,11 +21,11 @@ class Admin_Controller extends Application {
 		$this->template->publish();
 	}
 
-	protected function _publish_user($name, $data = null)
+	protected function _publish_tab($group, $name, $data = null)
 	{
-		$this->_publish('users/manage', array(
+		$this->_publish($group . '/layout', array(
 			'active' => $name,
-			'content' => $this->auth->view('users/' . $name, $data)
+			'content' => $this->auth->view($group . '/' . $name, $data)
 		));
 	}
 

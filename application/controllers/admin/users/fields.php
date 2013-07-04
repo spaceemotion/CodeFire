@@ -16,7 +16,7 @@ class Fields extends Admin_Controller {
 	{
 		$this->_set_default_tab('list');
 
-		$this->_publish_user('fields/index', array(
+		$this->_publish_tab('users', 'fields/index', array(
 			'fields' => $this->fields->find_all()
 		));
 	}

@@ -35,12 +35,13 @@
 							'dashboard' => array('Dashboard', 'home'),
 							'pages' => array('Pages', 'book'),
 							'users/manage' => array('Users', 'user'),
+							'templates' => array('Templates', 'picture'),
 							'extensions' => array('Modules', 'file'),
 							'settings' => array('Settings', 'cog')
 						);
 
 						foreach($navbar as $element => $config) {
-							$active = $element == (isset($page) ? startsWith($element, $page[0]) : false);
+							$active = isset($page) ? startsWith($element, $page[0]) : false;
 
 							echo '<li' . ($active ? ' class="active"' : '') . '>';
 							echo anchor(CodeFire::ADMINCP . $element, '<i class="icon-' . $config[1] . ($active ? '' : ' icon-white') . '"></i> <span>' . $config[0] . '</span>');

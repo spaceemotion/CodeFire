@@ -9,7 +9,7 @@ class Config extends Admin_Controller {
 	{
 		
 		
-		$this->_publish_user('config');
+		$this->_publish_tab('users', 'config');
 	}
 
 }

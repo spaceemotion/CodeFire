@@ -5,9 +5,9 @@ require_once APPPATH . "core/codefire/admin_controller.php";
 
 class Extensions extends Admin_Controller {
 
-	public function index()
+	public function install()
 	{
-		$this->_publish('extensions');
+		$this->_publish_tab('extensions', 'install');
 	}
 
 }
