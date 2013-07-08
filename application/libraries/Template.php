@@ -22,6 +22,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * --- Any additional code by CodeFire Framework ---
+ *
  */
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
@@ -30,14 +33,16 @@ class Template {
     
     /* default values */
     private $_template = 'template';
-    private $_parser = FALSE;
+    private $_template_file = 'template.php';
+    private $_template_xml = 'template.xml';
     private $_cache_ttl = 0;
 
-    private $_template_path = 'templates/';
-    private $_widget_path = '';
+    private $_template_path;
+    private $_widget_path;
     
     private $_ci;
     private $_partials = array();
+    private $_layout;
     
     /**
      * Construct with configuration array. Codeigniter will use the config file otherwise
@@ -48,7 +53,7 @@ class Template {
         $this->_ci->load->library('assets');
         
         // set the default paths
-        $this->_template_path = '../../' . $this->_ci->codefire->config('template_path');
+        $this->_template_path = BASEPATH . '../' . $this->_ci->codefire->config('template_path');
         $this->_widget_path = $this->_ci->codefire->config('widget_path');
         
         if (!empty($config)) {
@@ -66,10 +71,6 @@ class Template {
     public function initialize($config = array()) {
         foreach ($config as $key => $val) {
             $this->{'_' . $key} = $val;
-        }
-        
-        if ($this->_parser && !class_exists('CI_Parser')) {
-            $this->_ci->load->library('parser');
         }
     }
     
@@ -115,6 +116,83 @@ class Template {
     public function get_template() {
         return $this->_template;
     }
+
+    public function get_template_information($name)
+    {
+        $file = $this->_template_path . $name . '/' . $this->_template_xml;
+
+        if(!is_file($file)) {
+            return null;
+        }
+
+        $xml = simplexml_load_file($file);
+        if(strtolower($xml->getName()) != 'template') {
+            return null;
+        }
+
+        $info = array();
+        $layouts = array();
+
+        if($xml !== FALSE) {
+            // General information
+            $info['name'] = (String) $xml->name;
+            $info['author'] = (String) $xml->author;
+            $info['version'] = (String) $xml->version;
+            $info['website'] = (String) $xml->website;
+            $info['description'] = (String) $xml->description;
+
+            // Default layout
+            $info['default_layout'] = $xml->layouts->attributes()->default;
+
+            // Add layout informatio
+            foreach ($xml->layouts->children() as $layout) {
+                $attributes = $layout->attributes();
+                
+                if (!isset($attributes->name)) {
+                    continue;
+                }
+
+                $positions = array();
+                
+                foreach ($layout->children() as $position) {
+                    $posAttr = $position->attributes();
+
+                    $positions[] = array(
+                        'name' => (String) $posAttr->name,
+                        'type' => (String) $posAttr->type
+                    );
+                }
+
+                $layouts[(String) $attributes->name] = $positions;
+            }
+        }
+
+        $info['layouts'] = $layouts;
+        return $info;
+    }
+
+    /**
+     * Returns an array of available templates
+     * @return array
+     */
+    public function get_templates() {
+        $templates = array();
+
+        foreach(glob($this->_template_path . '*/' . $this->_template_xml) as $file) {
+            $name = basename(dirname($file));
+            $templates[$name] = $this->get_template_information($name);
+        }
+
+        return $templates;
+    }
+
+    /**
+     * Sets the current template layout
+     * @param name The layout name
+     */
+    public function set_layout($name) {
+        $this->_layout = $name;
+    }
     
     /**
      * Publish the template with the current partials
@@ -132,19 +210,27 @@ class Template {
         if (!$this->_template) {
             show_error('There was no template file selected for the current template');
         }
-        
-        if (is_array($data) || is_object($data)) {
-            foreach ($data as $name => $content) {
-                $this->partial($name)->set($content);
-            }
+
+        if (!$this->_layout) {
+            // Try to get default layout
+            $this->set_layout($this->get_template_information($this->_template)['default_layout']);
         }
-        
-        unset($data);
-        
-        if ($this->_parser) {
-            $this->_ci->parser->parse($this->_template, $this->_partials);
+
+        if($this->_layout) {
+            if (is_array($data) || is_object($data)) {
+                foreach ($data as $name => $content) {
+                    $this->partial($name)->set($content);
+                }
+            }
+            
+            unset($data);
+            
+            $path = '../../' . $this->_ci->codefire->config('template_path') . $this->_template . '/';
+            $this->layout = $this->_ci->load->view($path . 'layouts/' . $this->_layout, $this->_partials, TRUE);
+            $this->_ci->load->view($path . $this->_template_file, $this->_partials);
+
         } else {
-            $this->_ci->load->view($this->_template_path . $this->_template . '/template', $this->_partials);
+            show_error('No layout file selected or no default layout has been set');
         }
     }
     
@@ -492,10 +578,6 @@ class Partial {
      */
     public function parse($view, $data = array(), $overwrite = false) {
         if (!$this->_cached) {
-            if (!class_exists('CI_Parser')) {
-                $this->_ci->load->library('parser');
-            }
-            
             // better object to array
             if (is_object($data)) {
                 $array = array();

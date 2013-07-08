@@ -8,7 +8,7 @@ class Application extends CI_Controller {
 		
 		log_message('debug', 'Application Loaded');
 
-		$this->output->enable_profiler(true);
+		// $this->output->enable_profiler(true);
 	}
 
 	public function login($redirect = NULL)
@@ -109,7 +109,8 @@ class Application extends CI_Controller {
 		}
 	}
 
-	protected function _set_register_rules($update = false, $use_pass = true) {
+	protected function _set_register_rules($update = false, $use_pass = true)
+	{
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|max_length[24]|' . ($update ? '' : 'callback_field_exists'));
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|max_length[32]|valid_email|' . ($update ? '' : 'callback_field_exists'));
 

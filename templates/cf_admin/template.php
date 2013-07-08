@@ -5,9 +5,6 @@
 
 	// Add javascript
 	Assets::add_script('bootstrap.min.js', $this->template);
-	// Assets::add_script('holder.js', $this->template));
-
-	$this->load->helper('html');
 
 ?><!DOCTYPE HTML>
 <html>
@@ -52,28 +49,7 @@
 			</div>
 		</div>
 
-		<!-- Content -->
-		<div class="wrapper container">
-			<ul class="muted breadcrumb">
-				<li>You are here: </li>
-				<?php
-					$link = substr(CodeFire::ADMINCP, 0, -1);
-
-					for($i = 0, $s = count($page); $i < $s; $i++) {
-						$link .= '/' . $page[$i];
-
-						echo $i == $s - 1 ? '<li class="active">' : '<li>';
-						echo anchor($link, ucfirst($page[$i]));
-
-						if($i < $s - 1) echo '<span class="divider">/</span>';
-						
-						echo '</li>';
-					}
-				?>
-			</ul>
-
-			<?php echo $this->template->content; ?>
-		</div>
+		<? echo $this->template->layout; ?>
 
 		<!-- Footer -->
 		<div class="footer muted container">

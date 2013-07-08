@@ -16,33 +16,6 @@ if(is_dir('install')) {
 	exit;
 }
 
-function _callStack($stacktrace = null) {
-	if($stacktrace === null) $stacktrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-
-	print '<pre>';
-	print str_repeat("=", 64) ."\n";
-
-	echo "Called by " . basename($stacktrace[0]['file']) . ": \n";
-	unset($stacktrace[0]); // Remove function call
-
-	print str_repeat("-", 64) ."\n";
-
-	$stacktrace = array_reverse($stacktrace);
-
-	foreach($stacktrace as $trace) {
-		if(isset($trace['file'])) {
-			print "-- ".basename($trace['file']) .": <b>" .$trace['function'] ."</b> [called in" . $trace['file'] . ":<b>" .$trace['line'] . "</b>]\n";
-
-		} else {
-			print " > ".$trace['class'] . $trace['type'] . $trace['function'] . "(...)\n";
-		}
-	}
-
-	print str_repeat("=", 64) ."\n";
-
-	print '</pre>';
-}
-
 function startsWith($haystack, $needle)
 {
 	return !strncmp($haystack, $needle, strlen($needle));

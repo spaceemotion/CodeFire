@@ -12,7 +12,16 @@ class Templates extends Admin_Controller {
 
 	public function index()
 	{
-		$this->_publish('templates/list');
+		$this->_publish('templates/list', array(
+			'templates' => $this->template->get_templates()
+		));
+	}
+
+	public function view($name = '')
+	{
+		$info = $this->template->get_template_information(rawurldecode($name));
+		
+		$this->_publish('templates/view', $info);
 	}
 
 }

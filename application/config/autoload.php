@@ -64,7 +64,7 @@ $autoload['libraries'] = array('codefire', 'session', 'form_validation', 'phpass
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'email', 'auth', 'codefire');
+$autoload['helper'] = array('html', 'url', 'email', 'auth', 'codefire');
 
 
 /*

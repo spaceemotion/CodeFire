@@ -9,8 +9,10 @@
 	
 	<description>Default CodeFire administrator template</description>
 
-	<!-- Template layout -->
-	<layout name="single">
-		<position type="content" name="content" />
-	</layout>
+	<!-- Template layouts -->
+	<layouts default="single">
+		<layout name="single">
+			<position type="content" name="Content" />
+		</layout>
+	</layouts>
 </template>
