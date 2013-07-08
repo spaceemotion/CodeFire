@@ -7,9 +7,9 @@ class Config extends Admin_Controller {
 
 	public function index()
 	{
-		
-		
-		$this->_publish_tab('users', 'config');
+		$this->_publish_tab('users', 'config', array(
+			'captcha_type' => $this->codefire->getSetting('user', 'captcha')
+		));
 	}
 
 }

@@ -45,15 +45,14 @@
 				font-size: 12px;
 				text-align: center;
 			}
+
+			legend { margin-bottom: 0; }
 		</style>
 	</head>
 
 	<body>
 		<div class="container box">
-			<?php
-
-			if(empty($_POST)) : ?>
-				
+			<?php if(empty($_POST)) : ?>
 				<p class="lead"><strong>Welcome to CodeFire!</strong><br />Enter the neccessarry information and hit the install button to get started. It's that simple!</p>
 
 				<form action="<? echo $base_url . 'index.php'; ?>" method="post" class="form-horizontal">
@@ -95,28 +94,84 @@
 								<input type="text" id="prefix" name="prefix" value="cf_">
 							</div>
 						</div>
-
-						<p>&nbsp;</p>
-						
-						<input type="submit" class="btn btn-primary" value="I am ready to install!" />
-						<input type="reset" class="btn" value="Reset all entered data" />
 					</fieldset>
+
+					<fieldset>
+						<legend>Admin user details</legend>
+
+						<div class="control-group">
+							<label class="control-label" for="admin_user">Username:</label>
+							<div class="controls">
+								<input type="text" id="admin_user" name="admin_user" value="administrator">
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="admin_mail">E-Mail:</label>
+							<div class="controls">
+								<input type="text" id="admin_mail" name="admin_mail">
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="admin_pass">Password:</label>
+							<div class="controls">
+								<input type="password" name="admin_pass" id="admin_pass">
+							</div>
+						</div>
+					</fieldset>
+
+					<p>&nbsp;</p>
+					
+					<input type="submit" class="btn btn-primary" value="I am ready to install!" />
+					<input type="reset" class="btn pull-right" value="Reset all entered data" />
 				</form>
 			
 			<? else:
 
 				function s($txt) { echo '<dd><span class="label label-success">Success</span> ' . $txt . '</dd>'; }
-				function e($txt) { echo '<dd><span class="label label-important">Error</span> ' . $txt . '</dd>'; }
 
+				function generateRandomString($length = 10) {
+					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					$randomString = '';
+
+					for ($i = 0; $i < $length; $i++) {
+						$randomString .= $characters[rand(0, strlen($characters) - 1)];
+					}
+
+					return $randomString;
+				}
+
+				// Database
 				$host = $_POST["host"];
 				$user = $_POST["user"];
 				$pass = $_POST["pass"];
-				$db = $_POST["db"];
+				$db   = $_POST["db"];
 				$prefix = $_POST["prefix"];
+
+				// Admin user
+				$admin_user = $_POST["admin_user"];
+				$admin_pass = $_POST["admin_pass"];
+				$admin_mail = $_POST["admin_mail"];
+
+				// Encrypt password
+				require_once __DIR__ . '/../application/vendor/PasswordHash.php';
+				$pHash = new PasswordHash(8, FALSE);
+				$admin_pass = $pHash->HashPassword($admin_pass);
 
 				try {
 					echo '<dl>';
-					echo '<dt>Connecting to database...</dt>';
+
+					// Check user
+					echo '<dt>Checking install conditions...</dt>';
+					if(strlen($admin_user) < 6) {
+						throw new Exception("The username has to be at least 6 characters long!");
+					} else {
+						s("Everything seems to be okay!");
+					}
+
+					// Database work
+					echo '<br /><dt>Connecting to database...</dt>';
 
 					$conn = new PDO("mysql:dbname=$db;host=$host", $user, $pass);
 					$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -127,18 +182,41 @@
 					s("Added tables and default values!");
 
 					echo '<br /><dt>Writing configuration file...</dt>';
-					$file = file_get_contents(BASE . 'config.tmpl.php');
-					$file = str_replace('%host%', $host, $file);
-					$file = str_replace('%user%', $user, $file);
-					$file = str_replace('%pass%', $pass, $file);
-					$file = str_replace('%db%', $db, $file);
-					$file = str_replace('%prefix%', $prefix, $file);
 
-					if(!@file_put_contents(BASE . '../application/config/database.php', $file)) {
-						throw new Exception("Error writing file. Please check permissions!");
+					$dbfile = file_get_contents(BASE . 'database.tmpl.php');
+					$dbfile = str_replace('%host%', $host, $dbfile);
+					$dbfile = str_replace('%user%', $user, $dbfile);
+					$dbfile = str_replace('%pass%', $pass, $dbfile);
+					$dbfile = str_replace('%db%', $db, $dbfile);
+					$dbfile = str_replace('%prefix%', $prefix, $dbfile);
+
+					if(!@file_put_contents(BASE . '../application/config/database.php', $dbfile)) {
+						throw new Exception("Error database writing file. Please check permissions!");
+					} else {
+						s("Wrote database details to config file!");
 					}
 
-					s("Wrote database details to config file!");
+					$cfgfile = file_get_contents(BASE . 'config.tmpl.php');
+					$cfgfile = str_replace('%key%', generateRandomString(32), $cfgfile);
+
+					if(!@file_put_contents(BASE . '../application/config/config.php', $cfgfile)) {
+						throw new Exception("Error config writing file. Please check permissions!");
+					} else {
+						s("Wrote general config file!");
+					}
+
+					
+
+					echo '<br /><dt>Registering admin user...</dt>';
+					$conn->query("INSERT INTO ${prefix}users (username, email, password, group_id, activated) VALUES(
+						'$admin_user',
+						'$admin_mail',
+						'$admin_pass',
+						1,
+						1
+					)");
+
+					s("Added admin user!");
 
 					echo '</dl><div class="alert alert-info">';
 						echo '<strong>Success!</strong><br />';
@@ -146,7 +224,7 @@
 					echo '</div>';
 
 				} catch(Exception $ex) {
-					e("Something went wrong: " . $ex->getMessage());
+					echo '<dd><span class="label label-important">Error</span> ' . "Something went wrong: " . $ex->getMessage() . '</dd>';
 
 					echo '</dl><div class="alert">';
 						echo '<strong>Warning!</strong><br />';

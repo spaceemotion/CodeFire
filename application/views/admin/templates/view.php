@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <div class="content">
 	<? if (isset($name)): ?>
-		<h3>View template <span class="pull-right">Make default</span></h3>
+		<h3>Template details <span class="pull-right">Make default</span></h3>
 		<div class="row-fluid">
 			<!-- General information -->
 			<div class="span6">

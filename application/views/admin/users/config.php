@@ -40,7 +40,7 @@
 					<? echo form_dropdown('captcha', array(
 						'none' => 'No captcha',
 						'image' => 'Basic image'
-					), 'image'); ?>
+					), $captcha_type); ?>
 				</div>
 			</div>
 		</div>

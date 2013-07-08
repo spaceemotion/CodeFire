@@ -30,6 +30,16 @@
 					<td><? echo form_password('password_conf', '', 'id="password_conf"'); ?></td>
 				</tr>
 			<? else: ?>
+				<? if(isset($captcha_image)): ?>
+					<tr>
+						<td><label for="captcha">Enter Captcha *</label></td>
+						<td>
+							<? echo $captcha_image; ?>
+							<? echo form_input('captcha', ''); ?>
+						</td>
+					</tr>
+				<? endif; ?>
+				
 				<tr>
 					<td><label for="group">User group *</label></td>
 					<td><? echo form_dropdown('group', $groups, $group, 'id="group"'); ?></td>

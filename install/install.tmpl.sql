@@ -41,10 +41,10 @@
 		`password` varchar(60) NOT NULL,
 		`group_id` int NOT NULL,
 		`registered`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		`last_login` timestamp,
+		`last_login` timestamp DEFAULT 0,
 		`banned` tinyint(1) NOT NULL DEFAULT 0,
 		`ban_reason` varchar(128) DEFAULT '',
-		`activated` tinyint(1) NOT NULL,
+		`activated` tinyint(1) NOT NULL DEFAULT 0,
 		`activate_key` varchar(32),
 		
 		-- currently unsupported:
@@ -52,6 +52,7 @@
 		-- `identifier` varchar(255) NOT NULL,
 
 		KEY `name` (`username`),
+		KEY `group` (`group_id`),
 		KEY `activate` (`activate_key`),
 
 		PRIMARY KEY (`id`)
@@ -103,6 +104,18 @@
 		KEY `id` (`id`),
 
 		UNIQUE KEY (`id`, `key_id`, `group`)
+	);
+
+	-- Captcha table
+	CREATE TABLE IF NOT EXISTS `%prefix%captchas` (
+		`captcha_id` BIGINT NOT NULL AUTO_INCREMENT,
+		`time` INT NOT NULL,
+		`ip_address` varchar(16) NOT NULL DEFAULT '0',
+		`secret` varchar(20) NOT NULL,
+
+		KEY `secret` (`secret`),
+
+		PRIMARY KEY `id` (`captcha_id`)
 	);
 
 
