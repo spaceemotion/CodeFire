@@ -12,63 +12,97 @@ class Captcha
 	{
 		$this->ci =& get_instance();
 
-		// Load helper
-		$this->load->helper('captcha');
+		// Captcha type
+		$this->type = $this->ci->codefire->getSetting('user', 'captcha');
 
-		// Initalize captcha library
-		$this->initalize();
+		if($this->need_captcha())
+		{
+			// Load helper
+			$this->ci->load->helper('captcha');
+
+			// Initalize captcha library
+			$this->initalize();
+		}
 	}
 
 	public function initalize()
 	{
 		// Delete old captchas
-		$this->ci->db->delete($this->table, "time < " . (time() - $this->expiration$expiration));
+		$this->ci->db->delete($this->table, "time < " . (time() - $this->expiration));
 	}
 
 	public function setup_form()
 	{
-		$this->form_validation->set_rules('captcha', 'Captcha', 'trim|required|max_length[20]|xss_clean');
+		if($this->need_captcha())
+		{
+			$this->ci->form_validation->set_rules('captcha', 'Captcha', 'trim|required|max_length[20]|xss_clean|callback_check_captcha');
+		}
 	}
 
 	public function create_captcha()
 	{
+		if(!$this->need_captcha())
+		{
+			return NULL;
+		}
+
 		// Create image
 		$this->captcha = create_captcha(array(
 			'img_path' => './captcha/',
-			'img_url' => base_url('captcha/'),
+			'img_url' => base_url('captcha'). '/',
 			'expiration' => $this->expiration
 		));
 
 		// Add database entry
-		$this->ci->insert($this->table, array(
+		$this->ci->db->insert($this->table, array(
 			'time' => $this->captcha['time'],
-			'ip_address' => $this->input->ip_address(),
+			'ip_address' => $this->ci->input->ip_address(),
 			'secret' => $this->captcha['word']
 		));
 
 		return $this->captcha;
 	}
 
-	public function get_image()
+	public function get_captcha()
 	{
-		if(!$this->captcha)
+		if($this->need_captcha())
 		{
-			$this->create_captcha();
+			if(!$this->captcha)
+			{
+				$this->create_captcha();
+			}
+
+			return $this->captcha['image'];
 		}
 
-		return $this->captcha['image'];
+		return NULL;
 	}
 
-	public function check_captcha()
+	public function check_captcha($input)
 	{
-		$sql = "SELECT COUNT(*) AS count FROM " . $this->table . " WHERE secret = ? AND ip_address = ? AND time > ?";
-		$query = $this->ci->db->query($sql, array(
-			$this->input->post('captcha'),
-			$this->input->ip_address(),
-			$this->expiration
-		));
+		if($this->need_captcha())
+		{
+			$this->ci->db->select_sum('captcha_id', 'count');
+			$this->ci->db->from($this->table);
+			$this->ci->db->where('secret', $input);
+			$this->ci->db->where('ip_address', $this->ci->input->ip_address());
+			$this->ci->db->where('time > ' . $this->expiration);
 
-		return $query->row()->count() > 0;
+			$result = $this->ci->db->get();
+
+			if($result->row()->count == 0)
+			{
+				$this->ci->form_validation->set_message('check_captcha', 'Invalid captcha entered');
+				return FALSE;
+			}
+		}
+		
+		return TRUE;
+	}
+
+	public function need_captcha()
+	{
+		return $this->type != 'none';
 	}
 
 }

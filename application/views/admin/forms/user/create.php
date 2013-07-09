@@ -13,33 +13,46 @@
 		<tbody>
 			<tr>
 				<td><label for="username">Username *</label></td>
-				<td><? echo form_input('username', $username, 'id="username"'); ?></td>
+				<td>
+					<? echo form_error('username'); ?>
+					<? echo form_input('username', $username, 'id="username"'); ?>
+				</td>
 			</tr>
 			<tr>
 				<td><label for="email">Email *</label></td>
-				<td><? echo form_input('email', $email, 'id="email"'); ?></td>
+				<td>
+					<? echo form_error('email'); ?>
+					<? echo form_input('email', $email, 'id="email"'); ?>
+				</td>
 			</tr>
 			<tr>
 				<td><label for="password">Password *</label></td>
-				<td><? echo form_password('password', '', 'id="password"'); ?></td>
+				<td>
+					<? echo form_error('password'); ?>
+					<? echo form_password('password', '', 'id="password"'); ?>
+				</td>
 			</tr>
 
 			<? if(!isset($admin)): ?>
 				<tr>
 					<td><label for="password_conf">Password confirmation *</label></td>
-					<td><? echo form_password('password_conf', '', 'id="password_conf"'); ?></td>
+					<td>
+						<? echo form_error('password_conf'); ?>
+						<? echo form_password('password_conf', '', 'id="password_conf"'); ?>
+					</td>
 				</tr>
-			<? else: ?>
+
 				<? if(isset($captcha_image)): ?>
 					<tr>
 						<td><label for="captcha">Enter Captcha *</label></td>
 						<td>
-							<? echo $captcha_image; ?>
+							<? echo form_error('captcha'); ?>
+							<? echo $captcha_image; ?><br />
 							<? echo form_input('captcha', ''); ?>
 						</td>
 					</tr>
 				<? endif; ?>
-				
+			<? else: ?>
 				<tr>
 					<td><label for="group">User group *</label></td>
 					<td><? echo form_dropdown('group', $groups, $group, 'id="group"'); ?></td>

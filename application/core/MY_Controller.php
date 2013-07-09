@@ -83,10 +83,14 @@ class Application extends CI_Controller {
 		$custom_fields = $this->_set_register_rules();
 		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|matches[password]');
 
+		$this->load->library('captcha');
+		$this->captcha->setup_form();
+
 		if($this->form_validation->run() == FALSE)
 		{
 			echo $this->auth->view('register', array(
-				'fields' => $custom_fields
+				'fields' => $custom_fields,
+				'captcha_image' => $this->captcha->get_captcha()
 			));
 		}
 		else
@@ -125,6 +129,11 @@ class Application extends CI_Controller {
 		}
 
 		return $custom_fields;
+	}
+
+	public function check_captcha($string)
+	{
+		return $this->captcha->check_captcha($string);
 	}
 
 }
